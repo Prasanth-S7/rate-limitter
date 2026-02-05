@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"sync"
 	"time"
 )
@@ -54,19 +55,21 @@ func (tb *tokenBucket) refill() {
 	tb.lastRefill = tb.lastRefill.Add(time.Duration(tokensToAdd) * tb.fillRate)
 }
 
+func (tb *tokenBucket) middleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !tb.Allow() {
+			http.Error(w, "Too Many Requests", http.StatusTooManyRequests)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+func getHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, Gophers! You requested: %s\n", r.URL.Path)
+}
+
 func main() {
 	tb := NewTokenBucket(10, 2)
-
-	// hit this every 0.1 seconds
-	ticker := time.NewTicker(100 * time.Millisecond)
-	defer ticker.Stop()
-
-	for i := 0; i < 10000; i++ {
-		<-ticker.C
-		if tb.Allow() {
-			fmt.Println("Request", i, "allowed")
-		} else {
-			fmt.Println("Request", i, "denied")
-		}
-	}
+	http.Handle("/", tb.middleware(http.HandlerFunc(getHandler)))
 }
