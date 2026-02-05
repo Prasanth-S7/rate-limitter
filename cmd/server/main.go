@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/Prasanth-S7/rate-limitter/internal/ratelimiter"
 	"github.com/Prasanth-S7/rate-limitter/pkg/middleware"
@@ -13,9 +14,9 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	tb := ratelimiter.NewTokenBucket(10, 2)
-	rl := middleware.New(tb)
+	manager := ratelimiter.NewManager(3, 1, 10*time.Minute)
+	limiter := middleware.New(manager, false)
 
-	http.Handle("/", rl.Middleware(http.HandlerFunc(getHandler)))
+	http.Handle("/", limiter.Handler(http.HandlerFunc(getHandler)))
 	http.ListenAndServe(":8000", nil)
 }
