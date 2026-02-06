@@ -5,7 +5,7 @@ Token bucket rate limiter for Go with per-client (IP/UserID) support.
 ## Installation
 
 ```bash
-go get github.com/Prasanth-S7/ratelimiter
+go get github.com/Prasanth-S7/rate-limiter
 
 ```
 
@@ -17,8 +17,8 @@ package main
 import (
     "net/http"
     "time"
-    "github.com/Prasanth-S7/ratelimiter"
-    "github.com/Prasanth-S7/ratelimiter/middleware"
+    "github.com/Prasanth-S7/rate-limiter"
+    "github.com/Prasanth-S7/rate-limiter/middleware"
 )
 
 func main() {
