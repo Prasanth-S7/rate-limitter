@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Prasanth-S7/rate-limitter/middleware"
-	"github.com/Prasanth-S7/rate-limitter/ratelimiter"
+	ratelimiter "github.com/Prasanth-S7/rate-limiter"
+	"github.com/Prasanth-S7/rate-limiter/middleware"
 )
 
 func getHandler(w http.ResponseWriter, r *http.Request) {

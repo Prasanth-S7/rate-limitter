@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/Prasanth-S7/rate-limitter/ratelimiter"
+	ratelimiter "github.com/Prasanth-S7/rate-limiter"
 )
 
 type RateLimiter struct {
