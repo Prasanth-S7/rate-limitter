@@ -5,7 +5,7 @@ Token bucket rate limiter for Go with per-client (IP/UserID) support.
 ## Installation
 
 ```bash
-go get github.com/Prasanth-S7/rate-limitter
+go get github.com/Prasanth-S7/rate-limiter@v1.0.0
 
 ```
 
