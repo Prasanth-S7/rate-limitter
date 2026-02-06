@@ -15,20 +15,22 @@ go get github.com/Prasanth-S7/rate-limitter
 package main
 
 import (
-    "net/http"
-    "time"
-    "github.com/Prasanth-S7/rate-limitter"
-    "github.com/Prasanth-S7/rate-limitter/middleware"
+	"net/http"
+	"time"
+
+	ratelimiter "github.com/Prasanth-S7/rate-limiter"
+	"github.com/Prasanth-S7/rate-limiter/middleware"
 )
 
 func main() {
-    // 10 tokens, 2/sec refill, 10min TTL
-    manager := ratelimiter.NewManager(10, 2, 10*time.Minute)
-    
-    // IP-based limiting
-    limiter := middleware.NewHTTP(manager, false)
-    
-    http.Handle("/", limiter.Handler(yourHandler))
-    http.ListenAndServe(":8080", nil)
+	manager := ratelimiter.NewManager(10, 2, 10*time.Minute)
+	limiter := middleware.New(manager, false)
+
+	// Use the limiter in your application, for example, as an HTTP middleware
+	http.Handle("/api", limiter.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello, World!"))
+	})))
+
+	http.ListenAndServe(":8080", nil)
 }
 ```
